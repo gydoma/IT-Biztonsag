@@ -1,0 +1,221 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[magyar]{babel}
+\usepackage{lmodern}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{float}
+\usepackage{setspace}
+
+\geometry{margin=2.5cm}
+\onehalfspacing
+\setlength{\parskip}{0.6em}
+\setlength{\parindent}{0pt}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue,
+  urlcolor=blue
+}
+
+\lstset{
+  basicstyle=\ttfamily\small,
+  frame=single,
+  breaklines=true,
+  columns=fullflexible,
+  backgroundcolor=\color{black!2},
+  keywordstyle=\color{blue!70!black},
+  commentstyle=\color{gray!70!black}
+}
+
+\title{IT biztonság}
+\author{Gyurkovics Dominik Balázs\\Debreceni Egyetem Informatikai Kar}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+\newpage
+
+\section{Bevezetés}
+Az IT biztonság célja, hogy a rendszerek és adatok a teljes életciklusuk során megőrizzék a \textbf{bizalmasságot}, \textbf{sértetlenséget} és \textbf{rendelkezésre állást}. A gyakorlati védelem nem egyetlen eszközön múlik, hanem egymásra rétegzett megoldásokon: jogosultságkezelés, hitelesítés, kriptográfia, hálózati védelem, monitoring és helyreállítási eljárások. A következő fejezetek összefoglalják a Linux és Windows környezetben alkalmazott, tananyagban szereplő megoldásokat, és a parancssori példák segítségével kézzelfoghatóvá teszik a folyamatokat.
+
+\section{Rendszer-helyreállítás és alapadminisztráció}
+Vészhelyzetben a rendszerhez való hozzáférés biztosítása kritikus. Linux környezetben a \texttt{rescue} mód és a \texttt{rd.break} kernelparaméter teszi lehetővé, hogy a root fájlrendszert írhatóvá téve helyreállítsuk a jelszavakat vagy a hibás konfigurációkat. A helyreállítás során figyelni kell a SELinux címkék visszaállítására is, különben később működési problémák jelentkezhetnek.
+
+\begin{lstlisting}[language=bash,caption={Helyreállítási műveletek (cheatsheet részlet)}]
+rd.break
+mount -o remount,rw /sysroot
+chroot /sysroot
+passwd
+touch ./autorelabel
+\end{lstlisting}
+
+Ezek a lépések biztosítják, hogy a rendszer újraindításkor automatikusan újracímkézze a fájlokat, és a hozzáférések ismét konzisztens állapotba kerüljenek.
+
+\section{Felhasználók, jelszavak és hitelesítés}
+A Linux felhasználói adatok a \texttt{/etc/passwd}, \texttt{/etc/group} és \texttt{/etc/shadow} állományokban találhatók. Míg a \texttt{passwd} a felhasználó azonosítóit és beállításait tartalmazza, a tényleges jelszóhash a \texttt{shadow} fájlba kerül. A jelszó élettartama, a figyelmeztetési időszak és a fiók lejárata mind auditálható és szigorítható, ami alapkövetelmény a biztonságos üzemeltetésben.
+
+\begin{lstlisting}[language=bash,caption={Felhasználó és jelszó-életciklus kezelés}]
+useradd user1
+id user1
+passwd -l user1
+chage -l user1
+chage -d 2020-01-01 -m 0 -M 30 -I 30 -E 2020-04-01 user1
+\end{lstlisting}
+
+\subsection{SSH és kulcsalapú autentikáció}
+Az SSH protokoll titkosított csatornát biztosít a távoli adminisztrációhoz. A jelszavas autentikáció helyett az aszimmetrikus kulcspár használata javasolt, ahol a privát kulcs kizárólag a felhasználónál, a publikus kulcs pedig a szerveren található. A kulcspár használata egyszerre növeli a biztonságot és egyszerűsíti a hozzáférés menedzsmentjét.
+
+\begin{lstlisting}[language=bash,caption={Kulcspár létrehozás és telepítés}]
+ssh-keygen -t rsa -b 4096
+ssh-copy-id ssh-user-3@localhost
+chmod 700 ~/.ssh
+chmod 600 ~/.ssh/authorized_keys
+\end{lstlisting}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[page=1,width=0.9\textwidth]{assets/ssh-key-auth.pdf}
+  \caption{Kulcsalapú SSH autentikáció áttekintése (meglévő PDF alapján).}
+\end{figure}
+
+\section{Hozzáférés-szabályozás és jogosultságok}
+Linux rendszereken az alapvető hozzáférés-szabályozás a klasszikus DAC (Discretionary Access Control) modellen alapul. Az \texttt{rwx} jogosultságok az \textit{owner}, \textit{group} és \textit{other} körök szerint értelmezhetők, katalógusok esetében pedig eltérő jelentésük van (pl. \textit{execute} nélkül a katalógus használhatatlan). A jogosultságok finomhangolására az ACL (Access Control List) szolgál, amely további felhasználók és csoportok számára is képes jogokat rendelni.
+
+\begin{lstlisting}[language=bash,caption={Jogosultságok és ACL kezelése}]
+ls -l
+chmod 640 file.txt
+chown user:group file.txt
+getfacl file.txt
+setfacl -m u:user:rwx file.txt
+\end{lstlisting}
+
+A speciális bitek (setuid, setgid, sticky) további biztonsági kontrollt adnak: a \textit{sticky bit} például megakadályozza, hogy bárki törölni tudjon fájlokat egy megosztott katalógusból. A rendszerszintű kontrollt a SELinux biztosítja, amely MAC (Mandatory Access Control) elven működik, és akár az ACL által engedélyezett műveleteket is megtagadhatja.
+
+Windows környezetben a NTFS jogosultságok és az \textit{Effective Access} vizsgálata segít megérteni, hogy egy adott felhasználó mit érhet el, míg az Auditing naplózza a hozzáférési eseményeket. Ez az ellenőrizhetőség elengedhetetlen a megfelelőség (compliance) és az incidensek kivizsgálása során.
+
+\section{Hálózatbiztonság és tűzfalak}
+A tűzfalak elsődleges szerepe a bejövő és kimenő hálózati forgalom szűrése. A host-based tűzfalak (pl. Linux Netfilter, Windows Firewall) közvetlenül az operációs rendszer szintjén védenek, és a csomagok fejlécadatai, illetve a kapcsolati állapot (stateful inspection) alapján hoznak döntést. A Linux \texttt{firewalld} zónákon keresztül egyszerűsíti a szabályok kezelését, míg Windowsban profilok (Domain, Private, Public) szerint történik a konfiguráció.
+
+\begin{lstlisting}[language=bash,caption={Firewalld alapműveletek}]
+ss -ltnp
+firewall-cmd --state
+firewall-cmd --zone=internal --add-service=http
+firewall-cmd --runtime-to-permanent
+nft list ruleset
+\end{lstlisting}
+
+A hálózati forgalom megfigyelésére a rögzítés és elemzés ad lehetőséget. A \texttt{dumpcap} vagy a Wireshark a forgalom mintavételezésével segít észlelni a gyanús aktivitást, különösen incidenskezelési helyzetekben.
+
+\begin{lstlisting}[language=bash,caption={Forgalom rögzítése és szűrése}]
+dumpcap -i enp0s3 -w /tmp/1.pcap -a duration:30
+dumpcap -i enp0s3 -f "host 10.0.0.1 && (icmp[0] == 0 || icmp[0] == 8 )"
+\end{lstlisting}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[page=1,width=0.9\textwidth]{assets/wireshark.pdf}
+  \caption{Forgalomrögzítés és elemzés szemléltetése (meglévő PDF alapján).}
+\end{figure}
+
+\section{Kriptográfia és kulcskezelés}
+A kriptográfia alapja, hogy a biztonságos adatkezeléshez megfelelő algoritmusokat és kulcsmenedzsmentet alkalmazzunk. Szimmetrikus titkosításnál (pl. AES) ugyanaz a kulcs szükséges a titkosításhoz és visszafejtéshez. Az ECB mód egyszerű, de mintázatot hagyhat az adatokban, ezért a CBC mód, só és inicializáló vektor használatával lényegesen biztonságosabb megoldást nyújt.
+
+\begin{lstlisting}[language=bash,caption={OpenSSL AES és RSA parancsok}]
+openssl aes-128-cbc -k PASSWORD -in file -out file.aes -p
+openssl aes-128-cbc -d -k PASSWORD -in file.aes
+openssl genpkey -algorithm RSA -out key.pem -pkeyopt rsa_keygen_bits:2048
+openssl dgst -sign key.pem -sha256 -out document.sign document
+openssl dgst -verify key.pem.pub -sha256 -signature document.sign document
+\end{lstlisting}
+
+Az aszimmetrikus eljárások (pl. RSA) megoldják a kulcsterjesztés problémáját, és lehetővé teszik a digitális aláírást. A tanúsítványok a nyilvános kulcsot hitelesítik, így garantálják a kapcsolat bizalmasságát és azonosíthatóságát. A tanúsítványlánc és a trust store biztosítja, hogy a kliens a megfelelően aláírt és érvényes kulcsokban bízzon.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[page=1,width=0.9\textwidth]{assets/enc.pdf}
+  \caption{Szimmetrikus titkosítási példa (meglévő PDF alapján).}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[page=1,width=0.9\textwidth]{assets/rsautl-encrypt-decrypt.pdf}
+  \caption{RSA titkosítás és visszafejtés (meglévő PDF alapján).}
+\end{figure}
+
+\section{Titkosított tárolók és platformbiztonság}
+A fájlrendszer szintű titkosítás a fizikai hozzáférés kockázatát kezeli. A Linux LUKS szabvány lehetővé teszi, hogy egy meghajtó titkosítását több jelszóval vagy kulcsfájllal oldjuk fel, miközben a mesterkulcs védetten tárolódik. A csatolási és feloldási folyamat automatizálható a \texttt{/etc/fstab} és \texttt{/etc/crypttab} állományok segítségével.
+
+\begin{lstlisting}[language=bash,caption={LUKS beállítási példa}]
+cryptsetup luksFormat /dev/sdb1
+cryptsetup luksOpen /dev/sdb1 secret
+mkfs.xfs /dev/mapper/secret
+mount /dev/mapper/secret /home
+cat /etc/crypttab
+\end{lstlisting}
+
+A TPM (Trusted Platform Module) hardveres védelmet biztosít, a PCR regiszterek segítségével azonosítja a boot folyamat integritását, és csak akkor adja ki a titkosított adatokat, ha a rendszer állapota változatlan. Windows környezetben a BitLocker hasonló elven működik: a FVEK és VMK kulcsok kombinációjával titkosít, és a TPM-re támaszkodva védi az adatokat. A helyreállítási kulcs készítése kritikus, mert hardverváltozás esetén a TPM megakadályozhatja az automatikus feloldást.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[page=1,width=0.9\textwidth]{assets/encrypted-device.pdf}
+  \caption{Titkosított meghajtó felépítése (meglévő PDF alapján).}
+\end{figure}
+
+\section{Megfigyelés és auditálás}
+A biztonságos üzemeltetés egyik alappillére az események nyomon követése. Linux rendszerekben a naplófájlok és audit rendszerek, Windowsban az Event Viewer biztosítja a hozzáférések és műveletek visszakövethetőségét. Az auditálás lehetővé teszi, hogy incidensek esetén pontosan rekonstruáljuk az események láncolatát, és igazolni tudjuk a szabályok betartását.
+
+\begin{lstlisting}[language=bash,caption={Windows és Linux audit eszközök}]
+gpedit.msc
+eventvwr.msc
+\end{lstlisting}
+
+\section{Összegzés}
+Az IT biztonság nem egyszeri feladat, hanem folyamatos kockázatkezelési és üzemeltetési tevékenység. A jogosultságok helyes beállítása, a biztonságos hitelesítés, a jól konfigurált tűzfalak, a kriptográfiai eljárások és a titkosított tárolók mind együttesen biztosítják, hogy a rendszer ellenálljon a fenyegetéseknek. A fenti eszközök és eljárások alkalmazásával olyan védelmi rétegek építhetők, amelyek a modern informatikai környezetben elvárt biztonsági szintet nyújtják.
+
+\appendix
+\section{Mellékletek: meglévő PDF-ekből származó ábrák}
+Az alábbi ábrák a rendelkezésre álló PDF-ekből kiemelt első oldalak, amelyek a gyakorlati parancsokat és folyamatokat szemléltetik.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[page=1,width=0.9\textwidth]{assets/dgst.pdf}
+  \caption{Digest és aláírási folyamatok.}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[page=1,width=0.9\textwidth]{assets/encrypt-loop.pdf}
+  \caption{Loop eszköz alapú titkosítás.}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[page=1,width=0.9\textwidth]{assets/key-transform.pdf}
+  \caption{Kulcstranszformációs lépések.}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[page=1,width=0.9\textwidth]{assets/ssh.pdf}
+  \caption{SSH kapcsolat és parancshasználat.}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[page=1,width=0.9\textwidth]{assets/sudoers.pdf}
+  \caption{Sudoers konfigurációs szemléltetés.}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[page=1,width=0.9\textwidth]{assets/users.pdf}
+  \caption{Felhasználókezelési parancsok.}
+\end{figure}
+
+\end{document}
