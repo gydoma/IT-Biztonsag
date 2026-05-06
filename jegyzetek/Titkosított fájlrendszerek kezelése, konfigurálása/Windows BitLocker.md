@@ -1,0 +1,5 @@
+A microsoft megoldása a meghajtótitkosításra a BitLocker.
+
+Control Panel > System and Security > BitLocker Drive Encryption
+
+Ez esetben is egy szimmetrikus kulcsú algoritmus áll a háttérben melynek (FVEK = Full Volume Encryption Key) kulcsát szintén titkosítás védi egy újabb (VMK = Volume Master Key) kulccsal. Ez utóbbit (a VMK-t) lehet feloldani többféle módon is, például egy jelszóval. A feloldáshoz a TPM chip is felhasználható. A TPM-ben tárolt adatok csak akkor érhetőek el, ha a rendszer integritása megmaradt, így ha eltávolítják a lemezt, akkor annak tartalma más számítógépbe helyezve kiolvashatatlan marad. A VMK feloldáshoz erősen ajánlott készíteni helyreállítási kulcsot. Ezzel szintén visszafejthető a VMK, ami különösen TPM-mel kombinálva jöhet jól. Előfordulhat ugyanis, hogy a TPM chip valamely hardverváltozást követően nem adja ki a benne tárolt információt (sérültnek véli a rendszerintegritást).

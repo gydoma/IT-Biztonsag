@@ -1,0 +1,8 @@
+A TPM (Trusted Platform Module) több biztonsághoz köthető feladatot is ellát. Kriptográfiai műveleteket végez, tud például véletlen számot generálni. A TPM-ben objektumok (például a VMK) is tárolható biztonságosan, titkosítva (sealed állapotban). A TPM csak a megfelelő feltételek teljesülése esetén hajlandó ezt feloldani (unseal) azaz az objektumot visszaadni.
+
+A TPM PCR (Platform Configuration Register) regisztereket tartalmaz amelyek értéke a boot folyamat különböző lépéseihez kötődik. A PCR regiszter tartalma egy hash érték ami egy hash lánc segítségével épül fel különböző (az adott PCR-hez tartozó) bootfolyamat lépések mért adataiból. (Azért van szükség hash láncra, mert több mérés adatait használhatja fel.) Ennek segítségével egy-egy PCR érték a boot folyamat egy meghatározott részének állapotát reprezentálja:
+
+- a PCR0 például firmware méréseket tartalmaz,
+- a PCR4 a boot loadert jellemzi.
+
+Egy-egy objektum tárolásakor (_seal_) adjuk meg, hogy mely PCR regiszterek értékének kell egyeznie a jelenlegi értékükkel, hogy az objektum kiolvasása (_unseal_) megtörténhessen. A Policy a kiválasztott PCR-ekhez tartozó feltételek összessége (melyiknek milyen értékkel kell rendelkeznie). A _sealing_ pillanatában a regiszterek jelenlegi értéke rögzül elvárt értékként, azaz kiolvasáskor is ezeknek az értékeknek kell szerepelnie a PCR regiszterekben hogy a TPM visszaadja az objektumot. Ezzel tulajdonképp azt adjuk meg, mely rendszerjellemzők változatlansága kell ahhoz, hogy az objektum elérhető legyen. Lehet például pont a PCR0 és PCR4 értéke együtt ami a firmware és a boot loader integritása együtt.
