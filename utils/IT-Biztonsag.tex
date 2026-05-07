@@ -5,10 +5,8 @@
 \usepackage{lmodern}
 \usepackage{geometry}
 \usepackage{hyperref}
-\usepackage{graphicx}
 \usepackage{xcolor}
 \usepackage{listings}
-\usepackage{float}
 \usepackage{setspace}
 
 \geometry{margin=2.5cm}
@@ -68,6 +66,16 @@ chage -l user1
 chage -d 2020-01-01 -m 0 -M 30 -I 30 -E 2020-04-01 user1
 \end{lstlisting}
 
+\subsection{Lejárati dátum és jelszó-élettartam finomhangolás}
+A fiók lejáratát és a jelszavak cseréjének kényszerítését a \texttt{chage} parancs kezeli. A dátumformátum \texttt{YYYY-MM-DD}, és érdemes figyelmeztetési időszakot (\texttt{-W}) és inaktív időszakot (\texttt{-I}) is beállítani, hogy a felhasználó még a fiók lezárása előtt értesítést kapjon.
+
+\begin{lstlisting}[language=bash,caption={Lejárati dátum és figyelmeztetések}]
+chage -E 2026-12-31 user1
+chage -W 7 -I 14 user1
+passwd --expire user1
+chage -l user1
+\end{lstlisting}
+
 \subsection{SSH és kulcsalapú autentikáció}
 Az SSH protokoll titkosított csatornát biztosít a távoli adminisztrációhoz. A jelszavas autentikáció helyett az aszimmetrikus kulcspár használata javasolt, ahol a privát kulcs kizárólag a felhasználónál, a publikus kulcs pedig a szerveren található. A kulcspár használata egyszerre növeli a biztonságot és egyszerűsíti a hozzáférés menedzsmentjét.
 
@@ -77,12 +85,6 @@ ssh-copy-id ssh-user-3@localhost
 chmod 700 ~/.ssh
 chmod 600 ~/.ssh/authorized_keys
 \end{lstlisting}
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[page=1,width=0.9\textwidth]{assets/ssh-key-auth.pdf}
-  \caption{Kulcsalapú SSH autentikáció áttekintése (meglévő PDF alapján).}
-\end{figure}
 
 \section{Hozzáférés-szabályozás és jogosultságok}
 Linux rendszereken az alapvető hozzáférés-szabályozás a klasszikus DAC (Discretionary Access Control) modellen alapul. Az \texttt{rwx} jogosultságok az \textit{owner}, \textit{group} és \textit{other} körök szerint értelmezhetők, katalógusok esetében pedig eltérő jelentésük van (pl. \textit{execute} nélkül a katalógus használhatatlan). A jogosultságok finomhangolására az ACL (Access Control List) szolgál, amely további felhasználók és csoportok számára is képes jogokat rendelni.
@@ -95,9 +97,36 @@ getfacl file.txt
 setfacl -m u:user:rwx file.txt
 \end{lstlisting}
 
+\subsection{Numerikus chmod értékek értelmezése}
+A numerikus jelölésnél minden számjegy három bitet kódol: olvasás (4), írás (2), végrehajtás (1). A három számjegy rendre a tulajdonos, csoport és más felhasználók jogait jelöli. Négy számjegy esetén az első a speciális biteket tartalmazza: \texttt{4=setuid}, \texttt{2=setgid}, \texttt{1=sticky}.
+
+\begin{lstlisting}[language=bash,caption={chmod gyors táblázat}]
+chmod 000 file.txt  # --- --- ---
+chmod 640 file.txt  # rw- r-- ---
+chmod 750 dir/      # rwx r-x ---
+chmod 1777 /tmp     # sticky bit, mindenki írhat, törlés védett
+\end{lstlisting}
+
 A speciális bitek (setuid, setgid, sticky) további biztonsági kontrollt adnak: a \textit{sticky bit} például megakadályozza, hogy bárki törölni tudjon fájlokat egy megosztott katalógusból. A rendszerszintű kontrollt a SELinux biztosítja, amely MAC (Mandatory Access Control) elven működik, és akár az ACL által engedélyezett műveleteket is megtagadhatja.
 
 Windows környezetben a NTFS jogosultságok és az \textit{Effective Access} vizsgálata segít megérteni, hogy egy adott felhasználó mit érhet el, míg az Auditing naplózza a hozzáférési eseményeket. Ez az ellenőrizhetőség elengedhetetlen a megfelelőség (compliance) és az incidensek kivizsgálása során.
+
+\section{Fájlrendszer létrehozása és partíciókezelés}
+A biztonságos tárolás alapja a kontrollált partícionálás és csatolás. A következő lépések bemutatják, hogyan készítsünk új fájlrendszert a \texttt{/dev/sdc} lemezen, hogyan hozzuk létre a \texttt{/dev/sdc1} partíciót, és hogyan csatoljuk azt egy fix mount pontra. A \texttt{blkid} parancs segítségével a tartós csatoláshoz szükséges UUID is megadható.
+
+\begin{lstlisting}[language=bash,caption={Partíció létrehozás /dev/sdc-n}]
+lsblk -f
+sudo wipefs -a /dev/sdc
+sudo parted -s /dev/sdc mklabel gpt
+sudo parted -s /dev/sdc mkpart primary ext4 1MiB 100%
+sudo partprobe /dev/sdc
+lsblk /dev/sdc
+sudo mkfs.ext4 -L data /dev/sdc1
+sudo mkdir -p /mnt/sdc1
+sudo mount /dev/sdc1 /mnt/sdc1
+sudo blkid /dev/sdc1
+sudo sh -c 'echo "UUID=... /mnt/sdc1 ext4 defaults,noatime 0 2" >> /etc/fstab'
+\end{lstlisting}
 
 \section{Hálózatbiztonság és tűzfalak}
 A tűzfalak elsődleges szerepe a bejövő és kimenő hálózati forgalom szűrése. A host-based tűzfalak (pl. Linux Netfilter, Windows Firewall) közvetlenül az operációs rendszer szintjén védenek, és a csomagok fejlécadatai, illetve a kapcsolati állapot (stateful inspection) alapján hoznak döntést. A Linux \texttt{firewalld} zónákon keresztül egyszerűsíti a szabályok kezelését, míg Windowsban profilok (Domain, Private, Public) szerint történik a konfiguráció.
@@ -117,12 +146,6 @@ dumpcap -i enp0s3 -w /tmp/1.pcap -a duration:30
 dumpcap -i enp0s3 -f "host 10.0.0.1 && (icmp[0] == 0 || icmp[0] == 8 )"
 \end{lstlisting}
 
-\begin{figure}[H]
-  \centering
-  \includegraphics[page=1,width=0.9\textwidth]{assets/wireshark.pdf}
-  \caption{Forgalomrögzítés és elemzés szemléltetése (meglévő PDF alapján).}
-\end{figure}
-
 \section{Kriptográfia és kulcskezelés}
 A kriptográfia alapja, hogy a biztonságos adatkezeléshez megfelelő algoritmusokat és kulcsmenedzsmentet alkalmazzunk. Szimmetrikus titkosításnál (pl. AES) ugyanaz a kulcs szükséges a titkosításhoz és visszafejtéshez. Az ECB mód egyszerű, de mintázatot hagyhat az adatokban, ezért a CBC mód, só és inicializáló vektor használatával lényegesen biztonságosabb megoldást nyújt.
 
@@ -134,19 +157,20 @@ openssl dgst -sign key.pem -sha256 -out document.sign document
 openssl dgst -verify key.pem.pub -sha256 -signature document.sign document
 \end{lstlisting}
 
+\subsection{Publikus kulcsos titkosítás vágólapról}
+Ha a publikus kulcs (PEM formátum, \texttt{-----BEGIN PUBLIC KEY-----}) a vágólapon van, először mentsük fájlba, majd ellenőrizzük és használjuk titkosításhoz. Nagy fájlok esetén ajánlott hibrid megoldást alkalmazni: a tartalmat szimmetrikus kulccsal titkosítani, a kulcsot pedig publikus kulccsal védeni.
+
+\begin{lstlisting}[language=bash,caption={Publikus kulcs mentése és titkosítás}]
+cat > public.pem
+chmod 600 public.pem
+openssl pkey -pubin -in public.pem -text -noout
+openssl pkeyutl -encrypt -pubin -inkey public.pem -in secret.txt -out secret.txt.enc
+openssl rand -out sym.key 32
+openssl enc -aes-256-gcm -salt -pbkdf2 -iter 200000 -in secret.txt -out secret.txt.enc -pass file:./sym.key
+openssl pkeyutl -encrypt -pubin -inkey public.pem -in sym.key -out sym.key.enc
+\end{lstlisting}
+
 Az aszimmetrikus eljárások (pl. RSA) megoldják a kulcsterjesztés problémáját, és lehetővé teszik a digitális aláírást. A tanúsítványok a nyilvános kulcsot hitelesítik, így garantálják a kapcsolat bizalmasságát és azonosíthatóságát. A tanúsítványlánc és a trust store biztosítja, hogy a kliens a megfelelően aláírt és érvényes kulcsokban bízzon.
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[page=1,width=0.9\textwidth]{assets/enc.pdf}
-  \caption{Szimmetrikus titkosítási példa (meglévő PDF alapján).}
-\end{figure}
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[page=1,width=0.9\textwidth]{assets/rsautl-encrypt-decrypt.pdf}
-  \caption{RSA titkosítás és visszafejtés (meglévő PDF alapján).}
-\end{figure}
 
 \section{Titkosított tárolók és platformbiztonság}
 A fájlrendszer szintű titkosítás a fizikai hozzáférés kockázatát kezeli. A Linux LUKS szabvány lehetővé teszi, hogy egy meghajtó titkosítását több jelszóval vagy kulcsfájllal oldjuk fel, miközben a mesterkulcs védetten tárolódik. A csatolási és feloldási folyamat automatizálható a \texttt{/etc/fstab} és \texttt{/etc/crypttab} állományok segítségével.
@@ -161,12 +185,6 @@ cat /etc/crypttab
 
 A TPM (Trusted Platform Module) hardveres védelmet biztosít, a PCR regiszterek segítségével azonosítja a boot folyamat integritását, és csak akkor adja ki a titkosított adatokat, ha a rendszer állapota változatlan. Windows környezetben a BitLocker hasonló elven működik: a FVEK és VMK kulcsok kombinációjával titkosít, és a TPM-re támaszkodva védi az adatokat. A helyreállítási kulcs készítése kritikus, mert hardverváltozás esetén a TPM megakadályozhatja az automatikus feloldást.
 
-\begin{figure}[H]
-  \centering
-  \includegraphics[page=1,width=0.9\textwidth]{assets/encrypted-device.pdf}
-  \caption{Titkosított meghajtó felépítése (meglévő PDF alapján).}
-\end{figure}
-
 \section{Megfigyelés és auditálás}
 A biztonságos üzemeltetés egyik alappillére az események nyomon követése. Linux rendszerekben a naplófájlok és audit rendszerek, Windowsban az Event Viewer biztosítja a hozzáférések és műveletek visszakövethetőségét. Az auditálás lehetővé teszi, hogy incidensek esetén pontosan rekonstruáljuk az események láncolatát, és igazolni tudjuk a szabályok betartását.
 
@@ -179,43 +197,22 @@ eventvwr.msc
 Az IT biztonság nem egyszeri feladat, hanem folyamatos kockázatkezelési és üzemeltetési tevékenység. A jogosultságok helyes beállítása, a biztonságos hitelesítés, a jól konfigurált tűzfalak, a kriptográfiai eljárások és a titkosított tárolók mind együttesen biztosítják, hogy a rendszer ellenálljon a fenyegetéseknek. A fenti eszközök és eljárások alkalmazásával olyan védelmi rétegek építhetők, amelyek a modern informatikai környezetben elvárt biztonsági szintet nyújtják.
 
 \appendix
-\section{Mellékletek: meglévő PDF-ekből származó ábrák}
-Az alábbi ábrák a rendelkezésre álló PDF-ekből kiemelt első oldalak, amelyek a gyakorlati parancsokat és folyamatokat szemléltetik.
+\section{Online források és dokumentációk}
+Az alábbi linkek megbízható, naprakész dokumentációkat tartalmaznak a fenti parancsokról és eljárásokról:
 
-\begin{figure}[H]
-  \centering
-  \includegraphics[page=1,width=0.9\textwidth]{assets/dgst.pdf}
-  \caption{Digest és aláírási folyamatok.}
-\end{figure}
+\begin{itemize}
+  \item \href{https://man7.org/linux/man-pages/}{Linux man oldalak (man7.org)}
+  \item \href{https://www.openssh.com/manual.html}{OpenSSH kézikönyvek}
+  \item \href{https://www.openssl.org/docs/manmaster/man1/}{OpenSSL parancs dokumentáció}
+  \item \href{https://firewalld.org/documentation.html}{firewalld dokumentáció}
+  \item \href{https://wiki.nftables.org/wiki-nftables/index.php/Main_Page}{nftables wiki}
+  \item \href{https://www.freedesktop.org/software/systemd/man/}{systemd és systemctl man oldalak}
+  \item \href{https://www.kernel.org/doc/html/latest/}{Linux kernel dokumentáció}
+\end{itemize}
 
-\begin{figure}[H]
-  \centering
-  \includegraphics[page=1,width=0.9\textwidth]{assets/encrypt-loop.pdf}
-  \caption{Loop eszköz alapú titkosítás.}
-\end{figure}
+\section{CHEATSHEET (teljes, emberileg olvasható formában)}
+A következő melléklet tartalmazza a frissített \texttt{CHEATSHEET.md} teljes szövegét, kiegészítve a részletes opciólistákkal és példákkal.
 
-\begin{figure}[H]
-  \centering
-  \includegraphics[page=1,width=0.9\textwidth]{assets/key-transform.pdf}
-  \caption{Kulcstranszformációs lépések.}
-\end{figure}
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[page=1,width=0.9\textwidth]{assets/ssh.pdf}
-  \caption{SSH kapcsolat és parancshasználat.}
-\end{figure}
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[page=1,width=0.9\textwidth]{assets/sudoers.pdf}
-  \caption{Sudoers konfigurációs szemléltetés.}
-\end{figure}
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[page=1,width=0.9\textwidth]{assets/users.pdf}
-  \caption{Felhasználókezelési parancsok.}
-\end{figure}
+\lstinputlisting[language=bash]{../CHEATSHEET.md}
 
 \end{document}
