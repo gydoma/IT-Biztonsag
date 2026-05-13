@@ -1,0 +1,27 @@
+\section{Tanúsítványkezelés és CA folyamatok}
+
+Ez a fejezet bemutatja a saját CA létrehozását, CSR-ek készítését és tanúsítványok aláírását.
+
+\subsection{CA alapok}
+\begin{lstlisting}[language=bash]
+# CA private key
+openssl genrsa -out ca.key 4096
+# Self-signed CA certificate
+openssl req -x509 -new -nodes -key ca.key -sha256 -days 3650 -out ca.crt -subj "/C=HU/ST=SomeState/L=City/O=Org/OU=IT/CN=MyCA"
+\end{lstlisting}
+
+\subsection{Webszerver CSR és aláírás}
+\begin{lstlisting}[language=bash]
+# Web private key
+openssl genpkey -algorithm RSA -out web.key -pkeyopt rsa_keygen_bits:2048
+# Create CSR
+openssl req -new -key web.key -out web.csr -subj "/C=HU/ST=SomeState/L=City/O=Org/CN=www.example.com"
+# CA signing
+openssl x509 -req -in web.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out web.crt -days 825 -sha256
+\end{lstlisting}
+
+\subsection{Trust store kezelés}
+\begin{itemize}
+  \item Linux: \texttt{trust anchor ca.crt} vagy rendszerszintű \texttt{/usr/local/share/ca-certificates/} és \texttt{update-ca-certificates}
+  \item Browser/OS: tenyérnyi különbségek, dokumentáld a célplatformot
+\end{itemize}

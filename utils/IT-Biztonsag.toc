@@ -1,0 +1,100 @@
+\select@language {magyar} \contentsline {section}{\numberline {1}Bevezetés}{6}{section.1}%
+\select@language {magyar} \contentsline {section}{\numberline {2}Rendszer-helyreállítás és alapadminisztráció}{6}{section.2}%
+\select@language {magyar} \contentsline {section}{\numberline {3}Felhasználók, jelszavak és hitelesítés}{6}{section.3}%
+\select@language {magyar} \contentsline {subsection}{\numberline {3.1}SSH és kulcsalapú autentikáció}{7}{subsection.3.1}%
+\select@language {magyar} \contentsline {section}{\numberline {4}Hozzáférés-szabályozás és jogosultságok}{7}{section.4}%
+\select@language {magyar} \contentsline {section}{\numberline {5}Hálózatbiztonság és tűzfalak}{8}{section.5}%
+\select@language {magyar} \contentsline {section}{\numberline {6}Kriptográfia és kulcskezelés}{8}{section.6}%
+\select@language {magyar} \contentsline {section}{\numberline {7}Titkosított tárolók és platformbiztonság}{9}{section.7}%
+\select@language {magyar} \contentsline {section}{\numberline {8}Megfigyelés és auditálás}{9}{section.8}%
+\select@language {magyar} \contentsline {section}{\numberline {9}Összegzés}{10}{section.9}%
+\select@language {magyar} \contentsline {section}{\numberline {A}Parancsreferencia – Gyorstalpaló}{10}{appendix.A}%
+\select@language {magyar} \contentsline {subsection}{\numberline {A.1}1. Helyreállítás és root hozzáférés}{10}{subsection.A.1}%
+\select@language {magyar} \contentsline {subsection}{\numberline {A.2}2. Felhasználók és jelszavak}{11}{subsection.A.2}%
+\select@language {magyar} \contentsline {subsection}{\numberline {A.3}3. SSH és kulcskezelés}{11}{subsection.A.3}%
+\select@language {magyar} \contentsline {subsection}{\numberline {A.4}4. Jogosultságok (chmod számjegyek)}{11}{subsection.A.4}%
+\select@language {magyar} \contentsline {subsection}{\numberline {A.5}5. Szövegfeldolgozás és szűrés}{11}{subsection.A.5}%
+\select@language {magyar} \contentsline {subsection}{\numberline {A.6}6. Titkosítás és kriptográfia}{12}{subsection.A.6}%
+\select@language {magyar} \contentsline {subsubsection}{\numberline {A.6.1}Szimmetrikus titkosítás (AES)}{12}{subsubsection.A.6.1}%
+\select@language {magyar} \contentsline {subsubsection}{\numberline {A.6.2}Aszimmetrikus titkosítás (RSA)}{12}{subsubsection.A.6.2}%
+\select@language {magyar} \contentsline {subsubsection}{\numberline {A.6.3}Digitális aláírás}{12}{subsubsection.A.6.3}%
+\select@language {magyar} \contentsline {subsection}{\numberline {A.7}7. LUKS – Titkosított tárolók}{12}{subsection.A.7}%
+\select@language {magyar} \contentsline {subsection}{\numberline {A.8}8. Tűzfal (firewalld)}{12}{subsection.A.8}%
+\select@language {magyar} \contentsline {subsection}{\numberline {A.9}9. Hálózat és forgalom rögzítés}{13}{subsection.A.9}%
+\select@language {magyar} \contentsline {subsection}{\numberline {A.10}10. Fájlrendszer particionálása}{13}{subsection.A.10}%
+\select@language {magyar} \contentsline {subsection}{\numberline {A.11}11. Folyamatok és erőforrások}{13}{subsection.A.11}%
+\select@language {magyar} \contentsline {subsection}{\numberline {A.12}12. Rendszer információ}{14}{subsection.A.12}%
+\select@language {magyar} \contentsline {subsection}{\numberline {A.13}13. Archiválás és tömörítés}{14}{subsection.A.13}%
+\select@language {magyar} \contentsline {subsection}{\numberline {A.14}14. Fájl keresés és szűrés}{14}{subsection.A.14}%
+\select@language {magyar} \contentsline {subsection}{\numberline {A.15}15. GPG – PGP titkosítás}{14}{subsection.A.15}%
+\select@language {magyar} \contentsline {subsection}{\numberline {A.16}16. Hashing és kódolás}{15}{subsection.A.16}%
+\select@language {magyar} \contentsline {subsection}{\numberline {A.17}17. Ütemezés (cron)}{15}{subsection.A.17}%
+\select@language {magyar} \contentsline {subsection}{\numberline {A.18}18. Csomag kezelés}{15}{subsection.A.18}%
+\select@language {magyar} \contentsline {subsection}{\numberline {A.19}19. Biztonságos jelszó- és fájl kezelés}{15}{subsection.A.19}%
+\select@language {magyar} \contentsline {subsection}{\numberline {A.20}20. Fájl átvitel}{15}{subsection.A.20}%
+\select@language {magyar} \contentsline {section}{\numberline {B}Hasznos referenciák és linkek}{16}{appendix.B}%
+\select@language {magyar} \contentsline {section}{\numberline {C}Bővített Cheatsheet tartalom}{16}{appendix.C}%
+\select@language {magyar} \contentsline {subsection}{\numberline {C.1}Fájlok törlése tulajdonos szerint}{16}{subsection.C.1}%
+\select@language {magyar} \contentsline {subsection}{\numberline {C.2}RSA kulcsok generálása és PKCS\#8 konverzió}{16}{subsection.C.2}%
+\select@language {magyar} \contentsline {subsection}{\numberline {C.3}Cron kalkulátor link és példa}{17}{subsection.C.3}%
+\select@language {magyar} \contentsline {subsection}{\numberline {C.4}Output példák a parancsokra}{17}{subsection.C.4}%
+\select@language {magyar} \contentsline {subsection}{\numberline {C.5}Hivatkozások}{18}{subsection.C.5}%
+\select@language {magyar} \contentsline {section}{\numberline {D}Kriptográfia – részletesen}{18}{appendix.D}%
+\select@language {magyar} \contentsline {subsection}{\numberline {D.1}AES példák és magyarázat}{18}{subsection.D.1}%
+\select@language {magyar} \contentsline {subsection}{\numberline {D.2}RSA és kulcsmenedzsment}{18}{subsection.D.2}%
+\select@language {magyar} \contentsline {subsection}{\numberline {D.3}Aláírások és ellenőrzések}{19}{subsection.D.3}%
+\select@language {magyar} \contentsline {section}{\numberline {E}Hálózat és forgalomelemzés}{19}{appendix.E}%
+\select@language {magyar} \contentsline {subsection}{\numberline {E.1}Nmap és felderítés}{19}{subsection.E.1}%
+\select@language {magyar} \contentsline {subsection}{\numberline {E.2}Forgalom rögzítése és elemzése}{19}{subsection.E.2}%
+\select@language {magyar} \contentsline {subsection}{\numberline {E.3}Socket és kapcsolat ellenőrzés}{19}{subsection.E.3}%
+\select@language {magyar} \contentsline {section}{\numberline {F}Lemezkezelés, particionálás és LUKS}{20}{appendix.F}%
+\select@language {magyar} \contentsline {subsection}{\numberline {F.1}Particionálás és fájlrendszer}{20}{subsection.F.1}%
+\select@language {magyar} \contentsline {subsection}{\numberline {F.2}LUKS titkosítás}{20}{subsection.F.2}%
+\select@language {magyar} \contentsline {section}{\numberline {G}Kimenet példák és minták}{20}{appendix.G}%
+\select@language {magyar} \contentsline {subsection}{\numberline {G.1}lsblk -f (mintakimenet)}{21}{subsection.G.1}%
+\select@language {magyar} \contentsline {subsection}{\numberline {G.2}openssl publikuskulcs (részlet)}{21}{subsection.G.2}%
+\select@language {magyar} \contentsline {subsection}{\numberline {G.3}cron példa URL hivatkozás}{21}{subsection.G.3}%
+\select@language {magyar} \contentsline {section}{\numberline {H}Felhasználók és fiókkezelés}{21}{appendix.H}%
+\select@language {magyar} \contentsline {subsection}{\numberline {H.1}Felhasználó létrehozása és opciók}{21}{subsection.H.1}%
+\select@language {magyar} \contentsline {subsection}{\numberline {H.2}/etc/passwd és /etc/shadow}{22}{subsection.H.2}%
+\select@language {magyar} \contentsline {section}{\numberline {I}Sudo és jogosultság delegálás}{22}{appendix.I}%
+\select@language {magyar} \contentsline {subsection}{\numberline {I.1}Sudoers alapok}{22}{subsection.I.1}%
+\select@language {magyar} \contentsline {section}{\numberline {J}SSH részletesen: kulcsok, konfiguráció és jogosultságok}{23}{appendix.J}%
+\select@language {magyar} \contentsline {subsection}{\numberline {J.1}Kulcsgenerálás és titkosítás}{23}{subsection.J.1}%
+\select@language {magyar} \contentsline {subsection}{\numberline {J.2}authorized\_keys és jogosultságok}{23}{subsection.J.2}%
+\select@language {magyar} \contentsline {subsection}{\numberline {J.3}SSH másolása és automatizálás}{24}{subsection.J.3}%
+\select@language {magyar} \contentsline {section}{\numberline {K}Fájl jogosultságok, ACL, setuid/setgid és sticky bitek}{24}{appendix.K}%
+\select@language {magyar} \contentsline {subsection}{\numberline {K.1}chmod numerikus és szimbolikus mód}{24}{subsection.K.1}%
+\select@language {magyar} \contentsline {subsection}{\numberline {K.2}setuid, setgid, sticky}{24}{subsection.K.2}%
+\select@language {magyar} \contentsline {subsection}{\numberline {K.3}ACL – finomhangolás}{25}{subsection.K.3}%
+\select@language {magyar} \contentsline {section}{\numberline {L}Tűzfalak és forgalom-szabályozás}{25}{appendix.L}%
+\select@language {magyar} \contentsline {subsection}{\numberline {L.1}firewalld alapok}{25}{subsection.L.1}%
+\select@language {magyar} \contentsline {subsection}{\numberline {L.2}nftables és netfilter}{25}{subsection.L.2}%
+\select@language {magyar} \contentsline {section}{\numberline {M}Hálózati forgalom rögzítése és elemzése}{26}{appendix.M}%
+\select@language {magyar} \contentsline {subsection}{\numberline {M.1}tcpdump / dumpcap használat}{26}{subsection.M.1}%
+\select@language {magyar} \contentsline {subsection}{\numberline {M.2}Pcap feldolgozás}{26}{subsection.M.2}%
+\select@language {magyar} \contentsline {section}{\numberline {N}OpenSSL – részletes parancsok és gyakorlat}{27}{appendix.N}%
+\select@language {magyar} \contentsline {subsection}{\numberline {N.1}Szimmetrikus titkosítás}{27}{subsection.N.1}%
+\select@language {magyar} \contentsline {subsection}{\numberline {N.2}RSA kulcsok és konverziók}{27}{subsection.N.2}%
+\select@language {magyar} \contentsline {subsection}{\numberline {N.3}Aláírás és ellenőrzés}{27}{subsection.N.3}%
+\select@language {magyar} \contentsline {subsection}{\numberline {N.4}Titkosítás OAEP-paddal}{27}{subsection.N.4}%
+\select@language {magyar} \contentsline {section}{\numberline {O}Tanúsítványkezelés és CA folyamatok}{28}{appendix.O}%
+\select@language {magyar} \contentsline {subsection}{\numberline {O.1}CA alapok}{28}{subsection.O.1}%
+\select@language {magyar} \contentsline {subsection}{\numberline {O.2}Webszerver CSR és aláírás}{28}{subsection.O.2}%
+\select@language {magyar} \contentsline {subsection}{\numberline {O.3}Trust store kezelés}{28}{subsection.O.3}%
+\select@language {magyar} \contentsline {section}{\numberline {P}GPG / PGP – levelezés és fájl titkosítás}{29}{appendix.P}%
+\select@language {magyar} \contentsline {subsection}{\numberline {P.1}Kulcsgenerálás és export}{29}{subsection.P.1}%
+\select@language {magyar} \contentsline {subsection}{\numberline {P.2}Fájl titkosítás és visszafejtés}{29}{subsection.P.2}%
+\select@language {magyar} \contentsline {section}{\numberline {Q}systemd és szolgáltatáskezelés}{29}{appendix.Q}%
+\select@language {magyar} \contentsline {subsection}{\numberline {Q.1}Alap műveletek}{29}{subsection.Q.1}%
+\select@language {magyar} \contentsline {subsection}{\numberline {Q.2}Naplók}{30}{subsection.Q.2}%
+\select@language {magyar} \contentsline {section}{\numberline {R}Automatizálás és ütemezés}{30}{appendix.R}%
+\select@language {magyar} \contentsline {subsection}{\numberline {R.1}Cron alapok}{30}{subsection.R.1}%
+\select@language {magyar} \contentsline {subsection}{\numberline {R.2}at egyszeri feladat}{30}{subsection.R.2}%
+\select@language {magyar} \contentsline {section}{\numberline {S}Csomagkezelés és frissítési gyakorlatok}{31}{appendix.S}%
+\select@language {magyar} \contentsline {subsection}{\numberline {S.1}dnf (RHEL/Fedora)}{31}{subsection.S.1}%
+\select@language {magyar} \contentsline {subsection}{\numberline {S.2}apt (Debian/Ubuntu)}{31}{subsection.S.2}%
+\select@language {magyar} \contentsline {section}{\numberline {T}Bevált gyakorlatok és biztonsági irányelvek}{32}{appendix.T}%
+\select@language {magyar} \contentsline {subsection}{\numberline {T.1}Alapelvek}{32}{subsection.T.1}%
+\select@language {magyar} \contentsline {subsection}{\numberline {T.2}Incidenskezelés}{32}{subsection.T.2}%
+\select@language {magyar} \contentsline {subsection}{\numberline {T.3}Dokumentáció}{32}{subsection.T.3}%

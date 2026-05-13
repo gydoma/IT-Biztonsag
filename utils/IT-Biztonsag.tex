@@ -78,11 +78,7 @@ chmod 700 ~/.ssh
 chmod 600 ~/.ssh/authorized_keys
 \end{lstlisting}
 
-\begin{figure}[H]
-  \centering
-  \includegraphics[page=1,width=0.9\textwidth]{assets/ssh-key-auth.pdf}
-  \caption{Kulcsalapú SSH autentikáció áttekintése (meglévő PDF alapján).}
-\end{figure}
+
 
 \section{Hozzáférés-szabályozás és jogosultságok}
 Linux rendszereken az alapvető hozzáférés-szabályozás a klasszikus DAC (Discretionary Access Control) modellen alapul. Az \texttt{rwx} jogosultságok az \textit{owner}, \textit{group} és \textit{other} körök szerint értelmezhetők, katalógusok esetében pedig eltérő jelentésük van (pl. \textit{execute} nélkül a katalógus használhatatlan). A jogosultságok finomhangolására az ACL (Access Control List) szolgál, amely további felhasználók és csoportok számára is képes jogokat rendelni.
@@ -117,11 +113,7 @@ dumpcap -i enp0s3 -w /tmp/1.pcap -a duration:30
 dumpcap -i enp0s3 -f "host 10.0.0.1 && (icmp[0] == 0 || icmp[0] == 8 )"
 \end{lstlisting}
 
-\begin{figure}[H]
-  \centering
-  \includegraphics[page=1,width=0.9\textwidth]{assets/wireshark.pdf}
-  \caption{Forgalomrögzítés és elemzés szemléltetése (meglévő PDF alapján).}
-\end{figure}
+
 
 \section{Kriptográfia és kulcskezelés}
 A kriptográfia alapja, hogy a biztonságos adatkezeléshez megfelelő algoritmusokat és kulcsmenedzsmentet alkalmazzunk. Szimmetrikus titkosításnál (pl. AES) ugyanaz a kulcs szükséges a titkosításhoz és visszafejtéshez. Az ECB mód egyszerű, de mintázatot hagyhat az adatokban, ezért a CBC mód, só és inicializáló vektor használatával lényegesen biztonságosabb megoldást nyújt.
@@ -136,17 +128,7 @@ openssl dgst -verify key.pem.pub -sha256 -signature document.sign document
 
 Az aszimmetrikus eljárások (pl. RSA) megoldják a kulcsterjesztés problémáját, és lehetővé teszik a digitális aláírást. A tanúsítványok a nyilvános kulcsot hitelesítik, így garantálják a kapcsolat bizalmasságát és azonosíthatóságát. A tanúsítványlánc és a trust store biztosítja, hogy a kliens a megfelelően aláírt és érvényes kulcsokban bízzon.
 
-\begin{figure}[H]
-  \centering
-  \includegraphics[page=1,width=0.9\textwidth]{assets/enc.pdf}
-  \caption{Szimmetrikus titkosítási példa (meglévő PDF alapján).}
-\end{figure}
 
-\begin{figure}[H]
-  \centering
-  \includegraphics[page=1,width=0.9\textwidth]{assets/rsautl-encrypt-decrypt.pdf}
-  \caption{RSA titkosítás és visszafejtés (meglévő PDF alapján).}
-\end{figure}
 
 \section{Titkosított tárolók és platformbiztonság}
 A fájlrendszer szintű titkosítás a fizikai hozzáférés kockázatát kezeli. A Linux LUKS szabvány lehetővé teszi, hogy egy meghajtó titkosítását több jelszóval vagy kulcsfájllal oldjuk fel, miközben a mesterkulcs védetten tárolódik. A csatolási és feloldási folyamat automatizálható a \texttt{/etc/fstab} és \texttt{/etc/crypttab} állományok segítségével.
@@ -161,11 +143,7 @@ cat /etc/crypttab
 
 A TPM (Trusted Platform Module) hardveres védelmet biztosít, a PCR regiszterek segítségével azonosítja a boot folyamat integritását, és csak akkor adja ki a titkosított adatokat, ha a rendszer állapota változatlan. Windows környezetben a BitLocker hasonló elven működik: a FVEK és VMK kulcsok kombinációjával titkosít, és a TPM-re támaszkodva védi az adatokat. A helyreállítási kulcs készítése kritikus, mert hardverváltozás esetén a TPM megakadályozhatja az automatikus feloldást.
 
-\begin{figure}[H]
-  \centering
-  \includegraphics[page=1,width=0.9\textwidth]{assets/encrypted-device.pdf}
-  \caption{Titkosított meghajtó felépítése (meglévő PDF alapján).}
-\end{figure}
+
 
 \section{Megfigyelés és auditálás}
 A biztonságos üzemeltetés egyik alappillére az események nyomon követése. Linux rendszerekben a naplófájlok és audit rendszerek, Windowsban az Event Viewer biztosítja a hozzáférések és műveletek visszakövethetőségét. Az auditálás lehetővé teszi, hogy incidensek esetén pontosan rekonstruáljuk az események láncolatát, és igazolni tudjuk a szabályok betartását.
@@ -179,43 +157,266 @@ eventvwr.msc
 Az IT biztonság nem egyszeri feladat, hanem folyamatos kockázatkezelési és üzemeltetési tevékenység. A jogosultságok helyes beállítása, a biztonságos hitelesítés, a jól konfigurált tűzfalak, a kriptográfiai eljárások és a titkosított tárolók mind együttesen biztosítják, hogy a rendszer ellenálljon a fenyegetéseknek. A fenti eszközök és eljárások alkalmazásával olyan védelmi rétegek építhetők, amelyek a modern informatikai környezetben elvárt biztonsági szintet nyújtják.
 
 \appendix
-\section{Mellékletek: meglévő PDF-ekből származó ábrák}
-Az alábbi ábrák a rendelkezésre álló PDF-ekből kiemelt első oldalak, amelyek a gyakorlati parancsokat és folyamatokat szemléltetik.
+\section{Parancsreferencia – Gyorstalpaló}
 
-\begin{figure}[H]
-  \centering
-  \includegraphics[page=1,width=0.9\textwidth]{assets/dgst.pdf}
-  \caption{Digest és aláírási folyamatok.}
-\end{figure}
+Az ebben a fejezetben szereplő parancsok az \textbf{IT-Biztonság – Cheatsheet.md} fájlból származnak, amely részletesen dokumentálja a Linux és Windows biztonsági eszközöket. Az alábbiakban a legfontosabb kategóriák rövid áttekintése látható:
 
-\begin{figure}[H]
-  \centering
-  \includegraphics[page=1,width=0.9\textwidth]{assets/encrypt-loop.pdf}
-  \caption{Loop eszköz alapú titkosítás.}
-\end{figure}
+\subsection{1. Helyreállítás és root hozzáférés}
 
-\begin{figure}[H]
-  \centering
-  \includegraphics[page=1,width=0.9\textwidth]{assets/key-transform.pdf}
-  \caption{Kulcstranszformációs lépések.}
-\end{figure}
+\begin{itemize}
+  \item \texttt{rd.break}: Kernel paraméter rescue módhoz.
+  \item \texttt{mount -o remount,rw /sysroot}: Rendszerpartíció írhatóvá tétele.
+  \item \texttt{chroot /sysroot}: Belépés helyreállítási környezetbe.
+  \item \texttt{passwd}: Jelszócsere.
+  \item \texttt{touch ./autorelabel}: SELinux újracímkézés indítása.
+\end{itemize}
 
-\begin{figure}[H]
-  \centering
-  \includegraphics[page=1,width=0.9\textwidth]{assets/ssh.pdf}
-  \caption{SSH kapcsolat és parancshasználat.}
-\end{figure}
+\subsection{2. Felhasználók és jelszavak}
 
-\begin{figure}[H]
+\begin{table}[H]
   \centering
-  \includegraphics[page=1,width=0.9\textwidth]{assets/sudoers.pdf}
-  \caption{Sudoers konfigurációs szemléltetés.}
-\end{figure}
+  \small
+  \begin{tabular}{|l|l|}
+    \hline
+    \textbf{Parancs} & \textbf{Leírás} \\
+    \hline
+    \texttt{useradd user1} & Felhasználó létrehozása \\\hline
+    \texttt{id user1} & UID, GID és csoportok listázása \\\hline
+    \texttt{passwd -l user1} & Jelszó zárolása \\\hline
+    \texttt{chage -l user1} & Jelszó-életciklus adatok \\\hline
+    \texttt{chage -E 2026-12-31 user1} & Fiók lejárati dátuma \\\hline
+  \end{tabular}
+\end{table}
 
-\begin{figure}[H]
+\subsection{3. SSH és kulcskezelés}
+
+\begin{lstlisting}[language=bash,caption={SSH kulcskezelés}]
+ssh-keygen -t rsa -b 4096
+ssh-keygen -t ed25519 -a 100
+ssh-copy-id user@host
+chmod 700 ~/.ssh
+chmod 600 ~/.ssh/authorized_keys
+\end{lstlisting}
+
+\subsection{4. Jogosultságok (chmod számjegyek)}
+
+\begin{table}[H]
   \centering
-  \includegraphics[page=1,width=0.9\textwidth]{assets/users.pdf}
-  \caption{Felhasználókezelési parancsok.}
-\end{figure}
+  \begin{tabular}{|c|c|l|}
+    \hline
+    \textbf{Szám} & \textbf{Közjelölés} & \textbf{Leírás} \\
+    \hline
+    0 & {-}{-}{-} & Nincs jog \\
+    1 & {-}{-}x & Végrehajtás / könyvtár \\
+    2 & {-}w{-} & Írás \\
+    3 & {-}wx & Írás + végrehajtás \\
+    4 & r{-}{-} & Olvasás \\
+    5 & r{-}x & Olvasás + végrehajtás \\
+    6 & rw{-} & Olvasás + írás \\
+    7 & rwx & Teljes hozzáférés \\
+    \hline
+  \end{tabular}
+\end{table}
+
+Példa: \texttt{chmod 750 /opt/app} jelenti: owner=rwx, group=r-x, other=---.
+
+\subsection{5. Szövegfeldolgozás és szűrés}
+
+\begin{itemize}
+  \item \texttt{grep -i pattern file}: Kisbetű-érzéketlen keresés.
+  \item \texttt{sed 's/old/new/g' file}: Helyettesítés globálisan.
+  \item \texttt{awk -F: '{print \$1}' /etc/passwd}: Mező alapú feldolgozás.
+  \item \texttt{cut -d: -f1 /etc/shadow}: Oszlop kiválasztása.
+\end{itemize}
+
+\subsection{6. Titkosítás és kriptográfia}
+
+\subsubsection{Szimmetrikus titkosítás (AES)}
+
+\begin{lstlisting}[language=bash,caption={AES-128-CBC}]
+openssl aes-128-cbc -k PASSWORD -in file -out file.aes -p
+openssl aes-128-cbc -d -k PASSWORD -in file.aes
+\end{lstlisting}
+
+Zászlók: \texttt{-k} jelszó, \texttt{-p} kulcs/IV kiírás, \texttt{-d} dekódolás.
+
+\subsubsection{Aszimmetrikus titkosítás (RSA)}
+
+\begin{lstlisting}[language=bash,caption={RSA kulcspár és műveletek}]
+openssl genpkey -algorithm RSA -out key.pem -pkeyopt rsa_keygen_bits:2048
+openssl rsa -in key.pem -pubout -out key.pub
+openssl pkeyutl -encrypt -pubin -inkey key.pub -in file -out file.enc
+openssl pkeyutl -decrypt -inkey key.pem -in file.enc -out file
+\end{lstlisting}
+
+\subsubsection{Digitális aláírás}
+
+\begin{lstlisting}[language=bash,caption={Aláírás és ellenőrzés}]
+openssl dgst -sign key.pem -sha256 -out doc.sign doc
+openssl dgst -verify key.pub -sha256 -signature doc.sign doc
+\end{lstlisting}
+
+\subsection{7. LUKS – Titkosított tárolók}
+
+\begin{lstlisting}[language=bash,caption={LUKS beállítás}]
+cryptsetup luksFormat /dev/sdb1
+cryptsetup luksOpen /dev/sdb1 secret
+mkfs.ext4 /dev/mapper/secret
+mount /dev/mapper/secret /mnt/data
+cryptsetup luksClose secret
+\end{lstlisting}
+
+\subsection{8. Tűzfal (firewalld)}
+
+\begin{itemize}
+  \item \texttt{firewall-cmd --state}: Firewalld státusza.
+  \item \texttt{firewall-cmd --zone=internal --add-service=http}: Szolgáltatás hozzáadása.
+  \item \texttt{firewall-cmd --permanent}: Tartós szabályzat.
+  \item \texttt{firewall-cmd --runtime-to-permanent}: Futó szabályok mentése.
+\end{itemize}
+
+\subsection{9. Hálózat és forgalom rögzítés}
+
+\begin{itemize}
+  \item \texttt{ss -tlnp}: Hallgatózó TCP portok részletei.
+  \item \texttt{netstat -an}: Aktív és passzív kapcsolatok.
+  \item \texttt{dumpcap -i eth0 -w capture.pcap -a duration:30}: Forgalom rögzítés 30 másodpercig.
+  \item \texttt{tcpdump -i eth0 'tcp port 80'}: TCP 80-as port csomagjai.
+\end{itemize}
+
+\subsection{10. Fájlrendszer particionálása}
+
+\begin{lstlisting}[language=bash,caption={Partíció létrehozása (/dev/sdc1)}]
+sudo parted /dev/sdc --script mklabel gpt \\
+  mkpart primary ext4 1MiB 100%
+sudo partprobe /dev/sdc
+sudo mkfs.ext4 -L data /dev/sdc1
+sudo mkdir -p /mnt/data
+sudo mount /dev/sdc1 /mnt/data
+\end{lstlisting}
+
+Tartós csatolás \texttt{/etc/fstab}-ba UUID-vel.
+
+\subsection{11. Folyamatok és erőforrások}
+
+\begin{itemize}
+  \item \texttt{ps aux}: Összes folyamat.
+  \item \texttt{top -u user1}: Felhasználó folyamatai.
+  \item \texttt{lsof -i :8080}: Mely folyamatok használják a 8080-as portot.
+  \item \texttt{systemctl status apache2}: Szolgáltatás státusza.
+\end{itemize}
+
+\subsection{12. Rendszer információ}
+
+\begin{itemize}
+  \item \texttt{uname -a}: Teljes rendszer info.
+  \item \texttt{lscpu}: CPU információ.
+  \item \texttt{lsblk -f}: Blokk eszközök és fájlrendszerek.
+  \item \texttt{df -h}: Lemez felhasználás (emberi formátumban).
+\end{itemize}
+
+\subsection{13. Archiválás és tömörítés}
+
+\begin{lstlisting}[language=bash,caption={TAR és GZIP}]
+tar -cvf archive.tar file1 file2
+tar -czvf archive.tar.gz file1 file2
+tar -xzvf archive.tar.gz
+zip -r archive.zip dir/
+unzip archive.zip
+\end{lstlisting}
+
+\subsection{14. Fájl keresés és szűrés}
+
+\begin{lstlisting}[language=bash,caption={find parancs}]
+find /home -name "*.txt"
+find / -type f -size +10M -mtime +30
+find /var -perm 777
+find / -name "*.log" -exec grep -l "error" {} \;
+\end{lstlisting}
+
+\subsection{15. GPG – PGP titkosítás}
+
+\begin{lstlisting}[language=bash,caption={GPG kulcsgenerálás és titkosítás}]
+gpg --full-generate-key
+gpg --armor --export user@example.com > public.asc
+gpg --encrypt --recipient user@example.com file.txt
+gpg --decrypt file.txt.gpg
+gpg --sign file.txt
+\end{lstlisting}
+
+\subsection{16. Hashing és kódolás}
+
+\begin{itemize}
+  \item \texttt{md5sum file}: MD5 hash.
+  \item \texttt{sha256sum file}: SHA256 hash.
+  \item \texttt{echo "text" | base64}: Base64 kódolás.
+  \item \texttt{echo "aGVsbG8=" | base64 -d}: Base64 dekódolás.
+\end{itemize}
+
+\subsection{17. Ütemezés (cron)}
+
+Cron szintaxis: \texttt{min hour day month weekday command}
+
+\begin{verbatim}
+0 2 * * * /usr/local/bin/backup.sh          # Runs every day at 02:00
+*/15 * * * * /usr/local/bin/check.sh        # Every 15 minutes
+0 0 * * 0 /usr/local/bin/weekly.sh          # Sunday at 00:00
+\end{verbatim}
+
+\subsection{18. Csomag kezelés}
+
+\begin{itemize}
+  \item \textbf{Fedora/RHEL/CentOS (dnf):} \texttt{dnf install}, \texttt{dnf update}, \texttt{dnf remove}
+  \item \textbf{Debian/Ubuntu (apt):} \texttt{apt install}, \texttt{apt upgrade}, \texttt{apt remove}
+\end{itemize}
+
+\subsection{19. Biztonságos jelszó- és fájl kezelés}
+
+\begin{lstlisting}[language=bash,caption={Biztonságos műveletek}]
+openssl rand -base64 32                    # Strong password
+shred -vfz -n 3 sensitive-file.txt        # Secure deletion
+find / -perm -4000 -type f                # Search for SETUID bits
+find / -perm -2000 -type f                # Search for SETGID bits
+\end{lstlisting}
+
+\subsection{20. Fájl átvitel}
+
+\begin{itemize}
+  \item \texttt{scp file.txt user@host:/tmp/}: Másolás SSH-n keresztül.
+  \item \texttt{rsync -avz local/ user@host:remote/}: Szinkronizálás tömörítéssel.
+  \item \texttt{curl -o file http://example.com}: Letöltés.
+  \item \texttt{wget http://example.com/file}: Letöltés (örökölt).
+\end{itemize}
+
+\section{Hasznos referenciák és linkek}
+
+\begin{itemize}
+  \item \textbf{Linux Man Pages:} \url{https://linux.die.net/man/}
+  \item \textbf{OWASP Top 10:} \url{https://owasp.org/www-project-top-ten/}
+  \item \textbf{CIS Benchmarks:} \url{https://www.cisecurity.org/cis-benchmarks/}
+  \item \textbf{NIST Cybersecurity Framework:} \url{https://www.nist.gov/cyberframework}
+  \item \textbf{Red Hat Security Guide:} \url{https://access.redhat.com/documentation/}
+  \item \textbf{Ubuntu Security:} \url{https://ubuntu.com/security}
+\end{itemize}
+
+% Include extended cheatsheet content (generated fragment)
+\input{texparts/cheatsheet_content.tex}
+\input{texparts/section_crypto.tex}
+\input{texparts/section_network.tex}
+\input{texparts/section_storage.tex}
+\input{texparts/section_examples.tex}
+\input{texparts/section_users.tex}
+\input{texparts/section_sudo.tex}
+\input{texparts/section_ssh.tex}
+\input{texparts/section_permissions.tex}
+\input{texparts/section_firewall.tex}
+\input{texparts/section_network_capture.tex}
+\input{texparts/section_openssl.tex}
+\input{texparts/section_certificates.tex}
+\input{texparts/section_gpg.tex}
+\input{texparts/section_systemd.tex}
+\input{texparts/section_automation.tex}
+\input{texparts/section_packages.tex}
+\input{texparts/section_best_practices.tex}
 
 \end{document}

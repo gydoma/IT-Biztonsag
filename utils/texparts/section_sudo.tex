@@ -1,0 +1,26 @@
+\section{Sudo és jogosultság delegálás}
+
+A \texttt{sudo} lehetővé teszi parancsok futtatását más felhasználó (általában root) nevében. A szabályokat a \texttt{/etc/sudoers} fájl vagy \texttt{visudo} szerkesztőn keresztül kezeljük.
+
+\subsection{Sudoers alapok}
+\begin{verbatim}
+# Example sudoers line
+admin ALL=(root) /usr/sbin/shutdown
+# Passwordless command
+admin ALL=(root) NOPASSWD:/usr/sbin/reboot
+\end{verbatim}
+
+Használat:
+\begin{lstlisting}[language=bash]
+# Run as root
+sudo -u root shutdown -r now
+# Teszt
+sudo -l  # lists the user's privileges
+\end{lstlisting}
+
+Tippek:
+\begin{itemize}
+  \item Mindig használjuk \texttt{visudo}-t, mert szintaxisellenőrzést végez.
+  \item Kerüljük a túl széles NOPASSWD bejegyzéseket — finomítsuk a parancslistát.
+  \item Használjunk csoport alapú szabályokat (pl. \%admin) a felügyelet egyszerűsítésére.
+\end{itemize}

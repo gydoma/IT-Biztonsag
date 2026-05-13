@@ -1,0 +1,24 @@
+\section{Kimenet példák és minták}
+
+Példák a parancsok kimenetére, hogy a felhasználó lássa, mire számítson.
+
+\subsection{lsblk -f (mintakimenet)}
+\begin{verbatim}
+NAME   FSTYPE LABEL UUID                                 MOUNTPOINT
+sda                                                         
+|--sda1 ext4         3a5f-...                           /
+`--sda2 swap         8f3b-...                           [SWAP]
+sdb                                                         
+`--sdb1 crypto_LUKS   7c9b-...                          
+`--mapper-secret ext4  a1b2-...                           /mnt/secret
+\end{verbatim}
+
+\subsection{openssl publikuskulcs (részlet)}
+\begin{verbatim}
+-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAv...
+-----END PUBLIC KEY-----
+\end{verbatim}
+
+\subsection{cron példa URL hivatkozás}
+A cron kifejezés ellenőrzéséhez használható: \url{https://crontab.guru/}

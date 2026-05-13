@@ -1,0 +1,47 @@
+\section{Felhasználók és fiókkezelés}
+
+Ez a fejezet részletesen bemutatja a felhasználók létrehozását, jellemző mezőit, jelszópolitika kezelését és a \texttt{/etc/passwd}, \texttt{/etc/shadow} fájlok felépítését.
+
+\subsection{Felhasználó létrehozása és opciók}
+\begin{lstlisting}[language=bash]
+# Create a basic user with home directory and bash shell
+useradd -m -s /bin/bash -G users user1
+# Set a custom UID
+useradd -u 1500 -m user2
+\end{lstlisting}
+
+Magyarázat:
+\begin{itemize}
+  \item \texttt{-m}: home létrehozása
+  \item \texttt{-s /bin/bash}: beállítja a login shellt
+  \item \texttt{-G users}: további csoporttagság
+  \item \texttt{-u UID}: explicit UID számozás (ügyeljünk az ütközésekre)
+\end{itemize}
+
+\subsection{/etc/passwd és /etc/shadow}
+\begin{verbatim}
+# /etc/passwd line format
+username:x:UID:GID:comment:home:shell
+# /etc/shadow line format
+username:passwordhash:lastchg:min:max:warn:inactive:expire:
+\end{verbatim}
+
+Gyakori műveletek:
+\begin{lstlisting}[language=bash]
+# Set password
+passwd user1
+# Lock password
+passwd -l user1
+# Unlock password
+passwd -u user1
+# Set password aging
+chage -d 2026-01-01 -M 90 -W 7 user1
+# Check aging settings
+chage -l user1
+\end{lstlisting}
+
+Biztonsági megjegyzések:
+\begin{itemize}
+  \item A jelszóhasheket soha ne osszuk meg.
+  \item Javasolt hosszú minimális és kötelező jelszópolitika, valamint többfaktoros autentikáció bevezetése.
+\end{itemize}

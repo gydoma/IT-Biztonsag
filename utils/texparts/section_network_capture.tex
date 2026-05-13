@@ -1,0 +1,23 @@
+\section{Hálózati forgalom rögzítése és elemzése}
+
+Részletes útmutató csomagok rögzítésére és BPF szűrők használatára.
+
+\subsection{tcpdump / dumpcap használat}
+\begin{lstlisting}[language=bash]
+# Simple capture
+sudo tcpdump -i enp0s3 -w /tmp/capture.pcap
+# BPF filter: HTTP traffic for a specific host
+sudo tcpdump -i enp0s3 'host 10.0.0.1 and tcp port 80' -w http.pcap
+# Rotation by size
+dumpcap -i enp0s3 -w /tmp/out -b filesize:10000 -a files:10
+\end{lstlisting}
+
+\subsection{Pcap feldolgozás}
+\begin{lstlisting}[language=bash]
+# Tshark: command-line processing
+tshark -r /tmp/capture.pcap -Y "http.request" -T fields -e http.host -e http.request.uri
+# Wireshark GUI analysis
+wireshark /tmp/capture.pcap
+\end{lstlisting}
+
+Biztonsági megjegyzés: rögzítés érzékeny adatokat tartalmazhat (jelszavak, tokenek). Jogilag és szabályozás tekintetében mindig ellenőrizd a jogosultságot a rögzítéshez.

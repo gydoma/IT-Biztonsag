@@ -1,0 +1,84 @@
+% Generated supplemental LaTeX fragment with expanded cheatsheet content
+\section{Bővített Cheatsheet tartalom}
+
+A következő rész a \texttt{CHEATSHEET.md}-ben található fontos parancsok bővített, magyarázó változata.
+
+\subsection{Fájlok törlése tulajdonos szerint}
+\begin{lstlisting}[language=bash,caption={Fájlok törlése user szerint}]
+# List for verification:
+find /path/to/dir -maxdepth 1 -type f -user operator -print
+
+# Interactive delete (recommended):
+find /path/to/dir -maxdepth 1 -type f -user operator -exec rm -i {} \;
+
+# Automatic, dangerous delete:
+find /path/to/dir -maxdepth 1 -type f -user operator -exec rm -f {} \;
+\end{lstlisting}
+
+Példa output (lista):
+\begin{verbatim}
+/path/to/dir/file1.txt
+/path/to/dir/log-2026-05-01.log
+/path/to/dir/.secret
+\end{verbatim}
+
+\subsection{RSA kulcsok generálása és PKCS\#8 konverzió}
+A következő példák bemutatják, hogyan generáljunk 512 bites RSA kulcsokat és hogyan alakítsuk át őket PKCS\#8 formátumba.
+
+\begin{lstlisting}[language=bash,caption={RSA 512 példa}]
+mkdir -p dev/example
+openssl genrsa -out dev/example/rsa-512-01.pem 512
+openssl pkcs8 -topk8 -inform PEM -outform PEM -nocrypt -in dev/example/rsa-512-01.pem -out dev/example/rsa-512-01-pkcs8.pem
+\end{lstlisting}
+
+További hasonló fájlok létrehozása automatizáltan:
+\begin{lstlisting}[language=bash]
+for i in {2..11}; do
+  openssl genrsa -out dev/example/rsa-512-0${i}.pem 512 && \
+  openssl pkcs8 -topk8 -inform PEM -outform PEM -nocrypt -in dev/example/rsa-512-0${i}.pem -out dev/example/rsa-512-0${i}-pkcs8.pem
+done
+\end{lstlisting}
+
+Példa (kivonat a PKCS\#8 fájlból):
+\begin{verbatim}
+MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBK...
+\end{verbatim}
+
+Megjegyzés: 512 bit demonstrációs célokra; ne használjuk erős titkosításhoz.
+
+\subsection{Cron kalkulátor link és példa}
+Használjunk megbízható cron kalkulátort a feladatok ütemezésének ellenőrzéséhez: \url{https://crontab.guru/}
+
+Példa cron bejegyzés és magyarázat:
+\begin{lstlisting}
+# Runs every day at 02:00:
+0 2 * * * /usr/local/bin/backup.sh
+# Cron calculator: https://crontab.guru/0%202%20*%20*%20*
+\end{lstlisting}
+
+\subsection{Output példák a parancsokra}
+\begin{itemize}
+  \item \texttt{lsblk -f} részlet:
+\begin{verbatim}
+NAME   FSTYPE LABEL UUID                                 MOUNTPOINT
+sda                                                          
+|--sda1 ext4         3a5f-...                           /
+`--sda2 swap         8f3b-...                           [SWAP]
+\end{verbatim}
+
+  \item \texttt{openssl rsa -in key.pem -pubout} kimenet (részlet):
+\begin{verbatim}
+-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAv...
+-----END PUBLIC KEY-----
+\end{verbatim}
+
+\end{itemize}
+
+\subsection{Hivatkozások}
+Bővebb olvasmányok és referencia oldalak:
+\begin{itemize}
+  \item Cron kifejezések: \url{https://crontab.guru/}
+  \item OpenSSL dokumentáció: \url{https://www.openssl.org/docs/man1.1.1/man1/}
+  \item find(1) man: \url{https://linux.die.net/man/1/find}
+\end{itemize}

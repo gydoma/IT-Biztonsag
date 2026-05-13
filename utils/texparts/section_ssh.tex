@@ -1,0 +1,33 @@
+\section{SSH részletesen: kulcsok, konfiguráció és jogosultságok}
+
+Az SSH aszimmetrikus kulcsokkal biztosít titkosított kommunikációt. A publikus kulcs a szerveren kerül elhelyezésre, a privát kulcs a kliensnél marad.
+
+\subsection{Kulcsgenerálás és titkosítás}
+\begin{lstlisting}[language=bash]
+# RSA 4096 bites kulcs
+ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa
+# Ed25519 (smaller and faster)
+ssh-keygen -t ed25519 -a 100 -f ~/.ssh/id_ed25519
+# Protect the private key with a passphrase
+ssh-keygen -p -f ~/.ssh/id_rsa
+\end{lstlisting}
+
+\subsection{authorized\_keys és jogosultságok}
+\begin{itemize}
+  \item A \path{~/.ssh/authorized_keys} fájlban tárolt publikuskulcsok határozzák meg a bejelentkezést.
+  \item Jogosultságok: \path{chmod 700 ~/.ssh} és \path{chmod 600 ~/.ssh/authorized_keys}.
+\end{itemize}
+
+\subsection{SSH másolása és automatizálás}
+\begin{lstlisting}[language=bash]
+# Copy the public key to the server
+ssh-copy-id user@host
+# Use a specific key
+ssh -i ~/.ssh/id_ed25519 user@host
+\end{lstlisting}
+
+Biztonsági megjegyzés:
+\begin{itemize}
+  \item Ne osszuk meg a privát kulcsot.
+  \item GPG-vel vagy hardware tokennel (YubiKey) tárolt kulcs további védelmet ad.
+\end{itemize}

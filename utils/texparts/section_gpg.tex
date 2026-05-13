@@ -1,0 +1,23 @@
+\section{GPG / PGP – levelezés és fájl titkosítás}
+
+GPG a személyes titkosítás és aláírás elterjedt eszköze. Bemutatjuk a kulcsgenerálást, exportot és fájl titkosítást.
+
+\subsection{Kulcsgenerálás és export}
+\begin{lstlisting}[language=bash]
+# Interactive key generation
+gpg --full-generate-key
+# Export public key in ASCII format
+gpg --armor --export user@example.com > public.asc
+# Private export (protected file!)
+gpg --armor --export-secret-keys user@example.com > private.asc
+\end{lstlisting}
+
+\subsection{Fájl titkosítás és visszafejtés}
+\begin{lstlisting}[language=bash]
+# Encrypt with the recipient's public key
+gpg --encrypt --recipient user@example.com file.txt
+# Decrypt
+gpg --decrypt file.txt.gpg > file.txt
+\end{lstlisting}
+
+Megjegyzés: GPG esetén is használjunk erős jelszavakat és biztonságos kulcstárolást; a kulcsokról készítsünk revocation tanúsítványt.

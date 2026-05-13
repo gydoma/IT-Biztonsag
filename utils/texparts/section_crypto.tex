@@ -1,0 +1,27 @@
+\section{Kriptográfia – részletesen}
+
+A kriptográfia két nagy csoportra bontható: szimmetrikus és aszimmetrikus algoritmusokra. A szimmetrikus titkosításnál ugyanaz a kulcs szükséges a titkosításhoz és visszafejtéshez (pl. AES), míg az aszimmetrikus (pl. RSA) különböző kulcsokat használ a publikus és privát műveletekhez.
+
+\subsection{AES példák és magyarázat}
+\begin{lstlisting}[language=bash]
+# AES-128-CBC encryption with a password
+openssl aes-128-cbc -k PASSWORD -in secret.txt -out secret.txt.aes -p
+# Decrypt
+openssl aes-128-cbc -d -k PASSWORD -in secret.txt.aes -out secret.txt.dec
+\end{lstlisting}
+
+Magyarázat: a \texttt{-k} egyszerű jelszót fogad; a valós környezetben \texttt{-pass} vagy kulcsfájl használata, PBKDF2 és só ajánlott: \texttt{-pbkdf2 -iter 200000}.
+
+\subsection{RSA és kulcsmenedzsment}
+A kulcsgenerálás, export és konverzió gyakori feladat; itt egy részletes példa a kulcsok kezelésére és a PKCS\#8 formátum használatára.
+\begin{lstlisting}[language=bash]
+# Generate RSA 2048 key pair (recommended minimum)
+openssl genpkey -algorithm RSA -out key-2048.pem -pkeyopt rsa_keygen_bits:2048
+# Extract public key
+openssl rsa -in key-2048.pem -pubout -out key-2048.pub
+# PKCS\#8 (unencrypted) conversion
+openssl pkcs8 -topk8 -inform PEM -outform PEM -nocrypt -in key-2048.pem -out key-2048-pkcs8.pem
+\end{lstlisting}
+
+\subsection{Aláírások és ellenőrzések}
+Digitális aláírás ellenőrizhető a \texttt{openssl dgst} parancsal; hasznos példák és leírások a cheatsheetben találhatók.

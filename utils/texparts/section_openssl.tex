@@ -1,0 +1,37 @@
+\section{OpenSSL – részletes parancsok és gyakorlat}
+
+Ez a fejezet az OpenSSL eszközcsomag gyakori parancsait magyarázza el példákkal és biztonsági megjegyzésekkel.
+
+\subsection{Szimmetrikus titkosítás}
+\begin{lstlisting}[language=bash]
+# AES-128-CBC with password (using \texttt{-k} is not recommended in production)
+openssl aes-128-cbc -k PASSWORD -in secret.txt -out secret.txt.aes -p
+# Stronger key derivation with PBKDF2
+openssl enc -aes-256-cbc -pbkdf2 -iter 200000 -salt -in secret.txt -out secret.txt.aes
+\end{lstlisting}
+
+\subsection{RSA kulcsok és konverziók}
+\begin{lstlisting}[language=bash]
+# Generate RSA 2048 key pair
+openssl genpkey -algorithm RSA -out private.pem -pkeyopt rsa_keygen_bits:2048
+# Extract public key
+openssl rsa -pubout -in private.pem -out public.pem
+# PKCS\#8 conversion (unencrypted)
+openssl pkcs8 -topk8 -inform PEM -outform PEM -nocrypt -in private.pem -out private-pkcs8.pem
+\end{lstlisting}
+
+\subsection{Aláírás és ellenőrzés}
+\begin{lstlisting}[language=bash]
+# Create a SHA256 signature
+openssl dgst -sha256 -sign private.pem -out doc.sign doc.txt
+# Verify with the public key
+openssl dgst -sha256 -verify public.pem -signature doc.sign doc.txt
+\end{lstlisting}
+
+\subsection{Titkosítás OAEP-paddal}
+\begin{lstlisting}[language=bash]
+openssl pkeyutl -encrypt -inkey public.pem -pubin -in secret.txt -out secret.txt.enc -pkeyopt rsa_padding_mode:oaep -pkeyopt rsa_oaep_md:sha256
+openssl pkeyutl -decrypt -inkey private.pem -in secret.txt.enc -out secret.txt.dec
+\end{lstlisting}
+
+Megjegyzés: mindig használjunk modern padding-ot (OAEP) és elegendő kulcshosszt (>=2048). A PKCS\#8 formátum modern alapértelmezés a kulcsok cseréjéhez.

@@ -1,0 +1,28 @@
+\section{Lemezkezelés, particionálás és LUKS}
+
+Részletes lépések a partíciók létrehozására, fájlrendszer készítésére és LUKS titkosításra.
+
+\subsection{Particionálás és fájlrendszer}
+\begin{lstlisting}[language=bash]
+# Create GPT partition and ext4 filesystem (/dev/sdc1)
+sudo parted /dev/sdc --script mklabel gpt mkpart primary ext4 1MiB 100%
+sudo partprobe /dev/sdc
+sudo mkfs.ext4 -L data /dev/sdc1
+sudo mkdir -p /mnt/data
+sudo mount /dev/sdc1 /mnt/data
+\end{lstlisting}
+
+\subsection{LUKS titkosítás}
+\begin{lstlisting}[language=bash]
+# Format and open LUKS volume
+sudo cryptsetup luksFormat /dev/sdb1
+sudo cryptsetup luksOpen /dev/sdb1 secret
+sudo mkfs.xfs /dev/mapper/secret
+sudo mount /dev/mapper/secret /mnt/secret
+# Use a key file
+sudo dd if=/dev/random of=/root/keyfile bs=16 count=1
+sudo chmod 000 /root/keyfile
+sudo cryptsetup luksAddKey /dev/sdb1 /root/keyfile
+\end{lstlisting}
+
+Megjegyzés: mindig készíts biztonsági mentést, és ellenőrizd a \texttt{blkid} és \texttt{lsblk -f} kimeneteket mielőtt \texttt{fstab}-ot szerkesztesz.

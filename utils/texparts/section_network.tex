@@ -1,0 +1,31 @@
+\section{Hálózat és forgalomelemzés}
+
+Ez a fejezet bemutatja a portscannelést, csomagrögzítést és alapvető hálózati diagnosztikai parancsokat.
+
+\subsection{Nmap és felderítés}
+\begin{lstlisting}[language=bash]
+# Alap portscan
+nmap 192.168.1.10
+# Specify port list
+nmap -p 22,80,443 192.168.1.10
+# Detect service versions
+nmap -sV 192.168.1.10
+\end{lstlisting}
+
+\subsection{Forgalom rögzítése és elemzése}
+\begin{lstlisting}[language=bash]
+# tcpdump alap
+sudo tcpdump -i eth0 -w /tmp/capture.pcap
+# BPF filter examples
+sudo tcpdump -i eth0 'tcp port 80 and host 10.0.0.5' -w http-10.0.0.5.pcap
+# Filters can be exported for Wireshark / Wireshark-CLI use
+\end{lstlisting}
+
+\subsection{Socket és kapcsolat ellenőrzés}
+\begin{lstlisting}[language=bash]
+# Listening TCP ports
+ss -tlnp
+# Details and related process
+ss -tlnp | grep 22
+\end{lstlisting}
+

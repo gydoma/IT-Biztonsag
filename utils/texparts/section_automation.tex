@@ -1,0 +1,30 @@
+\section{Automatizálás és ütemezés}
+
+Ebben a részben a cron és at használatát, valamint a crontab kifejezések magyarázatát találod.
+
+\subsection{Cron alapok}
+Cron sor formátum: \texttt{min hour day month weekday command}
+\begin{lstlisting}
+# Example: every day at 02:00
+0 2 * * * /usr/local/bin/backup.sh
+# Example: every 15 minutes
+*/15 * * * * /usr/local/bin/check.sh
+\end{lstlisting}
+
+Használj cron-kalkulátort ellenőrzéshez: \url{https://crontab.guru/}
+
+\subsection{at egyszeri feladat}
+\begin{lstlisting}
+# Egy egyszeri parancs ma 22:30-kor
+echo "/usr/local/bin/job.sh" | at 22:30
+# List jobs
+atq
+# Delete job
+atrm 1
+\end{lstlisting}
+
+Biztonság:
+\begin{itemize}
+  \item Kerüljük a jelszavakat és titkos kulcsokat cron bejegyzésekben; használjunk kulcsfájlokat és megfelelő jogosultságokat.
+  \item Monitorozzuk a cron futásokat és outputokat (redirect stdout/stderr fájlba) és riasztást építsünk hibákra.
+\end{itemize}

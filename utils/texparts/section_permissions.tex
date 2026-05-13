@@ -1,0 +1,38 @@
+\section{Fájl jogosultságok, ACL, setuid/setgid és sticky bitek}
+
+Ez a fejezet részletesen tárgyalja a UNIX jogrendszer elemeit és finomhangolási lehetőségeit.
+
+\subsection{chmod numerikus és szimbolikus mód}
+\begin{lstlisting}[language=bash]
+# Numeric example: owner rwx, group r-x, other ---
+chmod 750 /opt/app
+# Symbolic mode: add read permission to the group
+chmod g+r file.txt
+\end{lstlisting}
+
+\subsection{setuid, setgid, sticky}
+\begin{itemize}
+  \item setuid (4000): futtatáskor a folyamat átveszi a fájl tulajdonosának jogosultságait (pl. passwd)
+  \item setgid (2000): futtatáskor a csoport jogosultságot örökli; könyvtár esetén új fájlok csoportját beállítja
+  \item sticky (1000): könyvtárban a fájlokat csak a tulajdonos vagy root törölheti (pl. /tmp)
+\end{itemize}
+
+\begin{lstlisting}[language=bash]
+# setuid, setgid example
+chmod 4755 /usr/bin/someprog
+chmod 2755 /srv/shared
+# set sticky bit on a directory
+chmod +t /srv/shared
+\end{lstlisting}
+
+\subsection{ACL – finomhangolás}
+\begin{lstlisting}[language=bash]
+# Read ACL
+getfacl /path/file
+# Add ACL for user "alice" with rwx
+setfacl -m u:alice:rwx /path/file
+# Recursive ACL
+setfacl -R -m u:alice:rwx /path/dir
+\end{lstlisting}
+
+Megjegyzés: ACL használatakor dokumentáljuk a szabályzatot, hogy elkerüljük a jogosultságok keveredését és auditálási problémákat.

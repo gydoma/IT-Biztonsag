@@ -1,0 +1,33 @@
+\section{systemd és szolgáltatáskezelés}
+
+A \texttt{systemctl} és \texttt{journalctl} eszközök a szolgáltatások és naplók kezelésének alapjai systemd rendszereken.
+
+\subsection{Alap műveletek}
+\begin{lstlisting}[language=bash]
+# Start
+systemctl start httpd
+# Stop
+systemctl stop httpd
+# Restart
+systemctl restart httpd
+# Enable at boot
+systemctl enable httpd
+# Check status
+systemctl status httpd
+\end{lstlisting}
+
+\subsection{Naplók}
+\begin{lstlisting}[language=bash]
+# Logs for a service
+journalctl -u httpd -n 200
+# Follow in real time
+journalctl -f
+# Time interval
+journalctl --since "2026-05-01" --until "2026-05-08"
+\end{lstlisting}
+
+Tippek:
+\begin{itemize}
+  \item Használjunk persistens journalt (ha szükséges) és forgassuk a helyi naplókat.
+  \item A naplókban található érzékeny információt kezeljük GDPR/ellenőrzési szempontok szerint.
+\end{itemize}

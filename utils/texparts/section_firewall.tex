@@ -1,0 +1,32 @@
+\section{Tűzfalak és forgalom-szabályozás}
+
+A host-alapú tűzfalak (firewalld, nftables) és a szabályzatok tervezése fontos része a védelemnek.
+
+\subsection{firewalld alapok}
+\begin{lstlisting}[language=bash]
+# Check status
+firewall-cmd --state
+# Allow a service at runtime
+firewall-cmd --zone=public --add-service=http
+# Persist the change
+firewall-cmd --permanent --zone=public --add-service=http
+firewall-cmd --runtime-to-permanent
+# List zone settings
+firewall-cmd --list-all --zone=public
+\end{lstlisting}
+
+\subsection{nftables és netfilter}
+\begin{lstlisting}[language=bash]
+# Full ruleset
+nft list ruleset
+# Create a new table and chain
+nft add table ip filter
+nft add chain ip filter input { type filter hook input priority 0; }
+\end{lstlisting}
+
+Tervezési szempontok:
+\begin{itemize}
+  \item Kizárólag szükséges szolgáltatásokat engedélyezzünk.
+  \item Zóna alapú megközelítés a host szerepének megfelelően (dmz, internal, trusted).
+  \item Logoljuk a drop-olt csomagokat, de figyeljünk az adatmennyiségre.
+\end{itemize}

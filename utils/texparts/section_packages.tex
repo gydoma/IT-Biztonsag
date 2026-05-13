@@ -1,0 +1,30 @@
+\section{Csomagkezelés és frissítési gyakorlatok}
+
+A rendszeres frissítés és csomagkezelés kritikus a biztonság fenntartásához. Itt a \texttt{dnf} és \texttt{apt} alapműveletei találhatók.
+
+\subsection{dnf (RHEL/Fedora)}
+\begin{lstlisting}[language=bash]
+# Install
+sudo dnf install package-name
+# Update
+sudo dnf upgrade --refresh
+# Search
+dnf search keyword
+# Installed packages list
+dnf list installed
+\end{lstlisting}
+
+\subsection{apt (Debian/Ubuntu)}
+\begin{lstlisting}[language=bash]
+# Update and install
+sudo apt update && sudo apt upgrade -y
+sudo apt install package-name
+# List installed packages
+apt list --installed
+\end{lstlisting}
+
+Best practice:
+\begin{itemize}
+  \item Használj teszt környezetet a frissítések kipróbálására.
+  \item Automatizált biztonsági frissítéseket alkalmazhatsz (unattended-upgrades).
+\end{itemize}

@@ -1,0 +1,23 @@
+\section{Bevált gyakorlatok és biztonsági irányelvek}
+
+Záró gondolatok és ajánlott irányelvek a rendszerbiztonság fenntartásához.
+
+\subsection{Alapelvek}
+\begin{itemize}
+  \item "Least privilege" – csak a szükséges jogosultságokat adjuk.
+  \item Rendszeres frissítés és sebezhetőség-ellenőrzés.
+  \item Jelszókezelés: hosszú, egyedi jelszavak; lehetőleg MFA.
+  \item Naplózás és monitorozás: centralizált naplók, riasztások.
+\end{itemize}
+
+\subsection{Incidenskezelés}
+\begin{itemize}
+  \item Készítsünk playbook-ot a gyakori forgatókönyvekre (első válasz, izolálás, gyűjtés).
+  \item Rendszeresen gyakoroljuk a helyreállítást és a forenzikus adathozzáférést.
+\end{itemize}
+
+\subsection{Dokumentáció}
+\begin{itemize}
+  \item Dokumentálj minden egyedi beállítást, sudo szabályt és kulcsot.
+  \item Verziókövetés konfigurációs mentésekhez (nem pedig titkos kulcsokhoz).
+\end{itemize}
